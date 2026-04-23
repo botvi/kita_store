@@ -10,9 +10,9 @@ use App\Models\Link;
 
 class DashboardSuperAdminController extends Controller
 {
- public function index(){
-    $pelanggan = User::where('role', 'user')->count();
-    $link = Link::count();
-    return view('pagesuperadmin.dashboard.index', compact('pelanggan', 'link'));
- }
+   public function index()
+   {
+      $pelanggan = User::where('role', 'user')->count();
+      return view('pagesuperadmin.dashboard.index', compact('pelanggan'));
+   }
 }

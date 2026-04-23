@@ -16,31 +16,39 @@
                     </li>
 
                     <li class="pc-item pc-caption">
-                        <label>Data Linkskuy</label>
+                        <label>Data KITA</label>
                         <i class="ti ti-dashboard"></i>
                     </li>
+
+
                     <li class="pc-item">
-                        <a href="{{ route('whatsapp-api.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-brand-whatsapp"></i></span>
-                            <span class="pc-mtext">API Whatsapp</span>
+                        <a href="{{ route('kategori-produk.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-list"></i></span>
+                            <span class="pc-mtext">Kategori Produk</span>
                         </a>
                     </li>
                     <li class="pc-item">
-                        <a href="{{ route('manage-testimoni.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-message-circle"></i></span>
-                            <span class="pc-mtext">Testimon Pelanggan</span>
+                        <a href="{{ route('produk.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-box"></i></span>
+                            <span class="pc-mtext">Produk</span>
                         </a>
                     </li>
                     <li class="pc-item">
-                        <a href="{{ route('manage-pelanggan.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-user"></i></span>
-                            <span class="pc-mtext">Pelanggan</span>
+                        <a href="{{ route('pesanan.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-shopping-cart"></i></span>
+                            <span class="pc-mtext">Kelola Pesanan</span>
                         </a>
                     </li>
                     <li class="pc-item">
-                        <a href="{{ route('brand.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ti ti-briefcase"></i></span>
-                            <span class="pc-mtext">Manage Brand</span>
+                        <a href="{{ route('laporan.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-printer"></i></span>
+                            <span class="pc-mtext">Laporan Penjualan</span>
+                        </a>
+                    </li>
+                    <li class="pc-item">
+                        <a href="{{ route('api-midtrans.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-credit-card"></i></span>
+                            <span class="pc-mtext">API Midtrans</span>
                         </a>
                     </li>
                 </ul>
