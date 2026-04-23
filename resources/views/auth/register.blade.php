@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KITA STORE - Register</title>
+    <title>KOJAR - Register</title>
     <!-- favicon -->
     <link rel="shortcut icon" href="{{ asset('env/hitam.png') }}" type="image/x-icon">
 
@@ -27,7 +27,7 @@
         <div class="text-center mb-8">
             <img src="{{ asset('env/hitam.png') }}" alt="Logo" class="h-16 mx-auto mb-4">
             <h2 class="text-3xl font-bold text-gray-900 mb-2">Buat Akun Baru</h2>
-            <p class="text-sm text-gray-500">Daftar ke KITA STORE untuk memulai</p>
+            <p class="text-sm text-gray-500">Daftar ke KOJAR untuk memulai</p>
         </div>
 
         <form method="POST" action="{{ route('register') }}" class="space-y-4">

@@ -16,7 +16,7 @@
                     </li>
 
                     <li class="pc-item pc-caption">
-                        <label>Data KITA</label>
+                        <label>Data KOJAR</label>
                         <i class="ti ti-dashboard"></i>
                     </li>
 

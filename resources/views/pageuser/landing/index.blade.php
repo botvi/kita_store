@@ -3,7 +3,7 @@
 @section('content')
     <div class="hero-section">
         <div class="container hero-content">
-            <h1 class="display-3 fw-bold mb-4" style="text-transform: uppercase; letter-spacing: 2px;">KITA STORE
+            <h1 class="display-3 fw-bold mb-4" style="text-transform: uppercase; letter-spacing: 2px;">KOJAR
             </h1>
             <p class="lead mb-5" style="max-width: 600px; margin: 0 auto; opacity: 0.9;">Tampil lebih berani dengan balutan
                 desain modern yang dirancang khusus untuk memenuhi gaya fashion streetwear masa kini.</p>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Laporan Penjualan - Toko KITA</title>
+    <title>Cetak Laporan Penjualan - Toko KOJAR</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         
@@ -85,7 +85,7 @@
 <body onload="window.print()">
 
     <div class="header">
-        <h1>Toko KITA</h1>
+        <h1>Toko KOJAR</h1>
         <p>Kuansing, Riau</p>
         <p>Telp / WA: +62877 36977344</p>
     </div>
@@ -141,7 +141,7 @@
 
     <div class="signature">
         <div class="signature-box">
-            <p style="margin-bottom: 70px;">Kuansing, {{ \Carbon\Carbon::now()->format('d M Y') }}<br>Hormat Kami,<br><strong>Admin Toko KITA</strong></p>
+            <p style="margin-bottom: 70px;">Kuansing, {{ \Carbon\Carbon::now()->format('d M Y') }}<br>Hormat Kami,<br><strong>Admin Toko KOJAR</strong></p>
             <p style="border-top: 1px solid #111; padding-top: 5px; text-align: center;">Tanda Tangan & Nama Terang</p>
         </div>
     </div>

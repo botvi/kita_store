@@ -3,7 +3,7 @@
 <!-- [Head] start -->
 
 <head>
-    <title>Dashboard | KITA STORE</title>
+    <title>Dashboard | KOJAR</title>
     <!-- [Meta] -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
@@ -64,7 +64,7 @@
         <div class="footer-wrapper container-fluid">
             <div class="row">
                 <div class="col-sm my-1">
-                    <p class="m-0">KITA STORE &#9829;</p>
+                    <p class="m-0">KOJAR &#9829;</p>
                 </div>
                 <div class="col-auto my-1">
                     <ul class="list-inline footer-link mb-0">

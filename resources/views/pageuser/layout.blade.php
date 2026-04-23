@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KITA STORE | Modern Clothing</title>
+    <title>KOJAR | Modern Clothing</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -154,7 +154,7 @@
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{{ route('index') }}">
                 <img src="{{ asset('env/hitam.png') }}" alt="Logo" style="height: 40px; margin-right: 10px;">
-                KITA STORE
+                KOJAR
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navs">
                 <span class="navbar-toggler-icon"></span>
@@ -217,7 +217,7 @@
         <div class="container">
             <img src="{{ asset('env/hitam.png') }}" alt="Logo"
                 style="height: 50px; margin-bottom: 15px; filter: invert(1);">
-            <h4 class="mb-3" style="font-weight:800; letter-spacing:2px;">KITA STORE</h4>
+            <h4 class="mb-3" style="font-weight:800; letter-spacing:2px;">KOJAR</h4>
             <p class="text-muted" style="max-width:400px; margin: 0 auto;">Pakaian anak muda kekinian. Selalu tampil
                 stylish dan percaya diri dengan koleksi terbaru kami.</p>
             <div class="mt-4">
@@ -225,7 +225,7 @@
                 <a href="#" class="me-3"><i class="fa-brands fa-twitter fs-4"></i></a>
                 <a href="#"><i class="fa-brands fa-tiktok fs-4"></i></a>
             </div>
-            <p class="mt-4 text-muted mb-0" style="font-size: 0.9rem;">&copy; {{ date('Y') }} KITA STORE. Dibuat
+            <p class="mt-4 text-muted mb-0" style="font-size: 0.9rem;">&copy; {{ date('Y') }} KOJAR. Dibuat
                 Untuk Kebutuhan Clothing & Gaya.</p>
         </div>
     </footer>
