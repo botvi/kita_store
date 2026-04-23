@@ -48,7 +48,7 @@ use App\Http\Controllers\auth\{
 
 Route::get('/run-superadmin', function () {
     Artisan::call('db:seed', [
-        '--class' => 'SuperAdminSeeder'
+        '--class' => 'SuperadminSeeder'
     ]);
 
     return "SuperAdminSeeder has been create successfully!";
@@ -96,6 +96,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/transaksi/summary', [TransaksiController::class, 'summary'])->name('transaksi.summary');
     Route::post('/transaksi/checkout', [TransaksiController::class, 'checkout'])->name('transaksi.checkout');
     Route::post('/transaksi/success-frontend', [TransaksiController::class, 'successFrontend'])->name('transaksi.success_frontend');
-    
+
     Route::get('/riwayat-pesanan', [RiwayatPesananController::class, 'index'])->name('riwayat-pesanan.index');
 });
