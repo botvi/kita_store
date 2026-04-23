@@ -16,7 +16,7 @@ class SuperadminSeeder extends Seeder
     public function run()
     {
         User::create([
-            'username' => 'admin',
+            'username' => 'admin123',
             'name' => 'admin',
             'role' => 'superadmin',
             'email' => 'admin@gmail.com',
