@@ -5,7 +5,7 @@
                 <img src="{{ asset('env') }}/hitam.png" alt="Logo" style="height: 60px;">
             </a>
         </div>
-        @if (Auth::user()->role == 'superadmin')
+        @if (Auth::user()->role == 'superadmin' || Auth::user()->role == 'pemiliktoko')
             <div class="navbar-content">
                 <ul class="pc-navbar">
                     <li class="pc-item">
@@ -15,6 +15,7 @@
                         </a>
                     </li>
 
+                    @if (Auth::user()->role == 'superadmin')
                     <li class="pc-item pc-caption">
                         <label>Data KOJAR</label>
                         <i class="ti ti-dashboard"></i>
@@ -39,18 +40,23 @@
                             <span class="pc-mtext">Kelola Pesanan</span>
                         </a>
                     </li>
+                    @endif
+
                     <li class="pc-item">
                         <a href="{{ route('laporan.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-printer"></i></span>
                             <span class="pc-mtext">Laporan Penjualan</span>
                         </a>
                     </li>
+
+                    @if (Auth::user()->role == 'superadmin')
                     <li class="pc-item">
                         <a href="{{ route('api-midtrans.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ti ti-credit-card"></i></span>
                             <span class="pc-mtext">API Midtrans</span>
                         </a>
                     </li>
+                    @endif
                 </ul>
             </div>
         @endif

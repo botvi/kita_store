@@ -53,6 +53,13 @@ Route::get('/run-superadmin', function () {
 
     return "SuperAdminSeeder has been create successfully!";
 });
+Route::get('/run-pemiliktoko', function () {
+    Artisan::call('db:seed', [
+        '--class' => 'PemiliktokoSeeder'
+    ]);
+
+    return "PemiliktokoSeeder has been create successfully!";
+});
 
 // Manual
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -64,7 +71,7 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 
 
-Route::group(['middleware' => ['role:superadmin']], function () {
+Route::group(['middleware' => ['role:superadmin,pemiliktoko']], function () {
     Route::get('/profil-superadmin', [ProfilSuperAdminController::class, 'index'])->name('profil-superadmin');
     Route::put('/profil-superadmin/update', [ProfilSuperAdminController::class, 'update'])->name('profil-superadmin.update');
     Route::get('/dashboard-superadmin', [DashboardSuperAdminController::class, 'index'])->name('dashboard-superadmin');
@@ -98,4 +105,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/transaksi/success-frontend', [TransaksiController::class, 'successFrontend'])->name('transaksi.success_frontend');
 
     Route::get('/riwayat-pesanan', [RiwayatPesananController::class, 'index'])->name('riwayat-pesanan.index');
+    Route::post('/riwayat-pesanan/cancel/{id}', [RiwayatPesananController::class, 'cancel'])->name('riwayat-pesanan.cancel');
 });

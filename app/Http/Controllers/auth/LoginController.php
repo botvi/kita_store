@@ -38,8 +38,8 @@ class LoginController extends Controller
     
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            if ($user->role == 'superadmin') {
-                Alert::success('Login Mantap!', 'Welcome back, Superadmin! Siap-siap ngatur dunia 😎');
+            if ($user->role == 'superadmin' || $user->role == 'pemiliktoko') {
+                Alert::success('Login Mantap!', 'Welcome back! Siap-siap ngatur dunia 😎');
                 return redirect()->route('dashboard-superadmin');
             } else if ($user->role == 'user') {
                 Alert::success('Login Mantap!', 'Halo bro, selamat datang lagi di Linkskuy!');

@@ -130,6 +130,8 @@
                                                     <button class="btn btn-dark w-100 rounded-0 fw-bold py-2 btn-pay"
                                                         data-token="{{ $pesanan->snap_token }}">BAYAR SEKARANG</button>
                                                 @endif
+                                                <button class="btn btn-outline-danger w-100 rounded-0 fw-bold py-2 mt-2 btn-cancel"
+                                                    data-id="{{ $pesanan->id }}">BATALKAN PESANAN</button>
                                             </div>
                                         </div>
                                     </div>
@@ -304,6 +306,70 @@
                             });
                         }
                     });
+                });
+            });
+
+            const cancelBtns = document.querySelectorAll('.btn-cancel');
+            cancelBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    let id = this.getAttribute('data-id');
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: "Pesanan ini akan dibatalkan dan dihapus!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, Batalkan!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Memproses...',
+                                text: 'Mohon tunggu sebentar',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading()
+                                }
+                            });
+
+                            fetch(`{{ url('riwayat-pesanan/cancel') }}/${id}`, {
+                                method: 'POST',
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil!',
+                                        text: data.message,
+                                        confirmButtonColor: '#111'
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Gagal',
+                                        text: data.message || 'Terjadi kesalahan.',
+                                        confirmButtonColor: '#111'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: 'Terjadi kesalahan pada sistem.',
+                                    confirmButtonColor: '#111'
+                                });
+                            });
+                        }
+                    })
                 });
             });
         });
