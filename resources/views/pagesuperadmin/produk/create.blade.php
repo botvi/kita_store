@@ -26,9 +26,7 @@
 
       <!-- [ Main Content ] start -->
       <div class="row justify-content-center">
-        <!-- [ form-element ] start -->
         <div class="col-sm-8">
-          <!-- Basic Inputs -->
           <div class="card">
             <div class="card-header">
               <h5>Form Tambah Produk</h5>
@@ -59,38 +57,61 @@
                 </div>
                 <div class="form-group mb-3">
                   <label class="form-label">Harga Custom (Opsional)</label>
-                  <input type="number" name="harga_custom" class="form-control" placeholder="Harga tambahan/berbeda jika pembeli menggunakan opsi custom">
-                </div>
-                <div class="form-group mb-3">
-                  <label class="form-label">Stok</label>
-                  <input type="number" name="stok" class="form-control" placeholder="50">
+                  <input type="number" name="harga_custom" class="form-control" placeholder="Harga tambahan jika pembeli memilih opsi custom">
                 </div>
                 <div class="form-group mb-3">
                   <label class="form-label">Gambar Produk (Bisa lebih dari 1)</label>
                   <input type="file" name="gambar[]" class="form-control" multiple accept="image/*">
-                  <small class="text-muted">Format yang didukung: jpeg, png, jpg, webp, gif. Kosongkan jika tidak ada gambar.</small>
+                  <small class="text-muted">Format: jpeg, png, jpg, webp, gif. Kosongkan jika tidak ada gambar.</small>
                 </div>
-                
+
+                <!-- ===== VARIAN ===== -->
                 <div class="form-group mb-3">
                   <label class="form-label">Varian</label>
                   <div id="varian-container">
                     <div class="input-group mb-2">
-                      <input type="text" name="varian[]" class="form-control" placeholder="Contoh: Merah, Hijau">
+                      <input type="text" name="varian[]" class="form-control varian-input" placeholder="Contoh: Merah, Hijau">
                       <button type="button" class="btn btn-danger remove-varian">Hapus</button>
                     </div>
                   </div>
-                  <button type="button" class="btn btn-sm btn-success" id="add-varian">Tambah Varian</button>
+                  <button type="button" class="btn btn-sm btn-success" id="add-varian">+ Tambah Varian</button>
                 </div>
 
+                <!-- ===== UKURAN + STOK PER UKURAN ===== -->
                 <div class="form-group mb-3">
                   <label class="form-label">Ukuran</label>
                   <div id="ukuran-container">
-                    <div class="input-group mb-2">
-                      <input type="text" name="ukuran[]" class="form-control" placeholder="Contoh: S, M, L, XL">
+                    <div class="ukuran-row input-group mb-2">
+                      <input type="text" name="ukuran[]" class="form-control ukuran-input" placeholder="Contoh: S, M, L, XL">
                       <button type="button" class="btn btn-danger remove-ukuran">Hapus</button>
                     </div>
                   </div>
-                  <button type="button" class="btn btn-sm btn-success" id="add-ukuran">Tambah Ukuran</button>
+                  <button type="button" class="btn btn-sm btn-success" id="add-ukuran">+ Tambah Ukuran</button>
+                </div>
+
+                <!-- ===== TABEL STOK PER UKURAN (dinamis) ===== -->
+                <div class="form-group mb-3" id="stok-section">
+                  <label class="form-label fw-bold">Stok Per Ukuran</label>
+                  <div class="alert alert-info py-2 px-3 small mb-2" id="stok-info-no-ukuran">
+                    <i class="ti ti-info-circle me-1"></i> Tidak ada ukuran — masukkan stok total produk.
+                  </div>
+                  <div id="stok-table-wrapper">
+                    <table class="table table-sm table-bordered" id="stok-table">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Ukuran</th>
+                          <th style="width:160px">Stok</th>
+                        </tr>
+                      </thead>
+                      <tbody id="stok-tbody">
+                        <!-- Baris default (jika tidak ada ukuran) -->
+                        <tr id="stok-default-row">
+                          <td class="align-middle text-muted fst-italic">Default (tanpa ukuran)</td>
+                          <td><input type="number" name="stok_ukuran[default]" class="form-control form-control-sm" value="0" min="0"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
                 <div class="form-group mb-4">
@@ -113,29 +134,74 @@
   </section>
 
   <script>
-    document.getElementById('add-varian').addEventListener('click', function() {
-        let container = document.getElementById('varian-container');
-        let div = document.createElement('div');
+    // =========== VARIAN ===========
+    document.getElementById('add-varian').addEventListener('click', function () {
+        const container = document.getElementById('varian-container');
+        const div = document.createElement('div');
         div.className = 'input-group mb-2';
-        div.innerHTML = '<input type="text" name="varian[]" class="form-control" placeholder="Contoh: Merah, Hijau"><button type="button" class="btn btn-danger remove-varian">Hapus</button>';
+        div.innerHTML = '<input type="text" name="varian[]" class="form-control varian-input" placeholder="Contoh: Merah, Hijau"><button type="button" class="btn btn-danger remove-varian">Hapus</button>';
         container.appendChild(div);
     });
 
-    document.getElementById('add-ukuran').addEventListener('click', function() {
-        let container = document.getElementById('ukuran-container');
-        let div = document.createElement('div');
-        div.className = 'input-group mb-2';
-        div.innerHTML = '<input type="text" name="ukuran[]" class="form-control" placeholder="Contoh: S, M, L, XL"><button type="button" class="btn btn-danger remove-ukuran">Hapus</button>';
-        container.appendChild(div);
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('remove-varian')) {
+            e.target.parentElement.remove();
+        }
     });
 
-    document.addEventListener('click', function(e) {
-        if(e.target && e.target.classList.contains('remove-varian')) {
-            e.target.parentElement.remove();
+    // =========== UKURAN + STOK DINAMIS ===========
+    function rebuildStokTable() {
+        const ukuranInputs = document.querySelectorAll('.ukuran-input');
+        const tbody = document.getElementById('stok-tbody');
+        const defaultRow = document.getElementById('stok-default-row');
+        const infoNoUkuran = document.getElementById('stok-info-no-ukuran');
+
+        // Kumpulkan nilai ukuran yang terisi
+        const ukuranValues = Array.from(ukuranInputs).map(el => el.value.trim()).filter(v => v !== '');
+
+        // Hapus semua baris kecuali default
+        Array.from(tbody.querySelectorAll('tr.stok-ukuran-row')).forEach(r => r.remove());
+
+        if (ukuranValues.length > 0) {
+            defaultRow.style.display = 'none';
+            infoNoUkuran.style.display = 'none';
+            ukuranValues.forEach(function (ukuran, idx) {
+                const tr = document.createElement('tr');
+                tr.className = 'stok-ukuran-row';
+                tr.innerHTML = `<td class="align-middle fw-semibold">${ukuran}</td>
+                    <td><input type="number" name="stok_ukuran[${idx}]" class="form-control form-control-sm" value="0" min="0"></td>`;
+                tbody.appendChild(tr);
+            });
+        } else {
+            defaultRow.style.display = '';
+            infoNoUkuran.style.display = '';
         }
-        if(e.target && e.target.classList.contains('remove-ukuran')) {
+    }
+
+    // Tambah ukuran baru
+    document.getElementById('add-ukuran').addEventListener('click', function () {
+        const container = document.getElementById('ukuran-container');
+        const div = document.createElement('div');
+        div.className = 'ukuran-row input-group mb-2';
+        div.innerHTML = '<input type="text" name="ukuran[]" class="form-control ukuran-input" placeholder="Contoh: S, M, L, XL"><button type="button" class="btn btn-danger remove-ukuran">Hapus</button>';
+        container.appendChild(div);
+
+        // Tambah listener ke input baru
+        div.querySelector('.ukuran-input').addEventListener('input', rebuildStokTable);
+        rebuildStokTable();
+    });
+
+    // Hapus baris ukuran
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('remove-ukuran')) {
             e.target.parentElement.remove();
+            rebuildStokTable();
         }
+    });
+
+    // Input listener ke ukuran pertama (yang sudah ada di DOM)
+    document.querySelectorAll('.ukuran-input').forEach(function (el) {
+        el.addEventListener('input', rebuildStokTable);
     });
   </script>
 @endsection

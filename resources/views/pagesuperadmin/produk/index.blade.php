@@ -45,7 +45,7 @@
                                             <th>Varian</th>
                                             <th>Ukuran</th>
                                             <th>Harga</th>
-                                            <th>Stok</th>
+                                            <th>Stok Per Ukuran</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -82,7 +82,19 @@
                                                     @endif
                                                 </td>
                                                 <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
-                                                <td>{{ $item->stok }}</td>
+                                                <td>
+                                                    @php $stokData = $item->stok_per_ukuran; @endphp
+                                                    @if(is_array($stokData) && count($stokData) > 0)
+                                                        @foreach($stokData as $uk => $stokVal)
+                                                            <span class="badge {{ $stokVal > 0 ? 'bg-success' : 'bg-danger' }} me-1 mb-1">
+                                                                {{ $uk === 'default' ? 'Stok' : $uk }}: {{ $stokVal }}
+                                                            </span>
+                                                        @endforeach
+                                                        <br><small class="text-muted">Total: {{ $item->getTotalStok() }}</small>
+                                                    @else
+                                                        <span class="badge bg-secondary">{{ $item->stok ?? '-' }}</span>
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <a href="{{ route('produk.edit', $item->id) }}"
                                                         class="btn btn-sm btn-warning">Edit</a>

@@ -31,48 +31,68 @@ class KeranjangController extends Controller
         ]);
 
         $produk = Produk::findOrFail($id);
-        
+
         $varian = $request->varian ?? '';
         $ukuran = $request->ukuran ?? '';
-        
+        $qty    = (int) ($request->qty ?? 1);
+
+        // ── Validasi stok per ukuran ─────────────────────────────────
+        $stokPerUkuran = $produk->stok_per_ukuran;
+        if (is_array($stokPerUkuran)) {
+            // Tentukan key stok yang relevan
+            $stokKey    = ($ukuran !== '' && isset($stokPerUkuran[$ukuran])) ? $ukuran : 'default';
+            $stokTersedia = (int) ($stokPerUkuran[$stokKey] ?? 0);
+
+            if ($stokTersedia === 0) {
+                return redirect()->back()->with('error', 'Maaf, stok ukuran ' . ($ukuran ?: 'produk ini') . ' sudah habis.');
+            }
+            if ($qty > $stokTersedia) {
+                return redirect()->back()->with('error', "Stok tidak mencukupi. Stok tersedia: {$stokTersedia}.");
+            }
+        }
+
         $fotoPath = '';
         if ($request->hasFile('foto_custom')) {
-            $file = $request->file('foto_custom');
+            $file     = $request->file('foto_custom');
             $fileName = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
             $file->move(public_path('uploads/custom'), $fileName);
             $fotoPath = 'uploads/custom/' . $fileName;
         }
-        
+
         $produkIdJson = [
-            'id' => $produk->id,
-            'varian' => $varian,
-            'ukuran' => $ukuran,
-            'foto_custom' => $fotoPath
+            'id'         => $produk->id,
+            'varian'     => $varian,
+            'ukuran'     => $ukuran,
+            'foto_custom'=> $fotoPath
         ];
 
         // Cek jika produk dgn varian dan ukuran sama sudah ada di keranjang
-        $existingKeranjang = Keranjang::where('user_id', Auth::id())->get()->filter(function($keranjang) use ($produkIdJson) {
-            
-            // if produk_id is string from db, maybe it returns array or string based on cast.
+        $existingKeranjang = Keranjang::where('user_id', Auth::id())->get()->filter(function ($keranjang) use ($produkIdJson) {
             $k_produk_id = is_string($keranjang->produk_id) ? json_decode($keranjang->produk_id, true) : $keranjang->produk_id;
-            
-            // Jika memilik foto custom, lebih baik buat baris baru (keranjang baru khusus). 
-            // Namun kalau foto_custom sama persis, bisa distack.
-            return isset($k_produk_id['id']) && 
-                   $k_produk_id['id'] == $produkIdJson['id'] && 
-                   ($k_produk_id['varian'] ?? '') == $produkIdJson['varian'] && 
+            return isset($k_produk_id['id']) &&
+                   $k_produk_id['id'] == $produkIdJson['id'] &&
+                   ($k_produk_id['varian'] ?? '') == $produkIdJson['varian'] &&
                    ($k_produk_id['ukuran'] ?? '') == $produkIdJson['ukuran'] &&
                    ($k_produk_id['foto_custom'] ?? '') == $produkIdJson['foto_custom'];
         })->first();
 
         if ($existingKeranjang) {
-            $existingKeranjang->qty += $request->qty;
+            // Validasi total qty tidak melebihi stok
+            if (is_array($stokPerUkuran ?? null)) {
+                $stokKey      = ($ukuran !== '' && isset($stokPerUkuran[$ukuran])) ? $ukuran : 'default';
+                $stokTersedia = (int) ($stokPerUkuran[$stokKey] ?? 0);
+                $qtyBaru      = $existingKeranjang->qty + $qty;
+                if ($qtyBaru > $stokTersedia) {
+                    return redirect()->back()->with('error', "Total qty melebihi stok tersedia ({$stokTersedia}).");
+                }
+            }
+            $existingKeranjang->qty += $qty;
             $existingKeranjang->save();
         } else {
             Keranjang::create([
-                'user_id' => Auth::id(),
-                'produk_id' => $produkIdJson, // Model cast as array, do not json_encode
-                'qty' => $request->qty
+                'user_id'   => Auth::id(),
+                'produk_id' => $produkIdJson,
+                'qty'       => $qty
             ]);
         }
 

@@ -58,21 +58,22 @@ class TransaksiController extends Controller
             $totalHarga += $harga_item;
             
             $produkList[] = [
-                'id' => $model_produk->id,
+                'id'          => $model_produk->id,
                 'nama_produk' => $model_produk->nama_produk,
-                'varian' => $produkDetail['varian'] ?? '',
-                'ukuran' => $produkDetail['ukuran'] ?? '',
-                'harga_satuan' => $hargaSatuan,
-                'qty' => $item->qty,
-                'subtotal' => $harga_item,
+                'varian'      => $produkDetail['varian'] ?? '',
+                'ukuran'      => $produkDetail['ukuran'] ?? '',
+                'harga_satuan'=> $hargaSatuan,
+                'qty'         => $item->qty,
+                'subtotal'    => $harga_item,
                 'foto_custom' => $produkDetail['foto_custom'] ?? ''
             ];
 
-            // Kurangi stok
-            if ($model_produk->stok !== null) {
-                $model_produk->stok = max(0, $model_produk->stok - $item->qty);
-                $model_produk->save();
-            }
+            // Kurangi stok per ukuran
+            $ukuranPilihan = $produkDetail['ukuran'] ?? '';
+            $stokKey = ($ukuranPilihan !== '' && is_array($model_produk->stok_per_ukuran) && isset($model_produk->stok_per_ukuran[$ukuranPilihan]))
+                ? $ukuranPilihan
+                : 'default';
+            $model_produk->kurangiStok($stokKey, $item->qty);
         }
 
         if (empty($produkList)) {
