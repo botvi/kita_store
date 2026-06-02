@@ -89,9 +89,9 @@
                   <button type="button" class="btn btn-sm btn-success" id="add-ukuran">+ Tambah Ukuran</button>
                 </div>
 
-                <!-- ===== TABEL STOK PER UKURAN (dinamis) ===== -->
+                <!-- ===== TABEL STOK + HARGA PER UKURAN (dinamis) ===== -->
                 <div class="form-group mb-3" id="stok-section">
-                  <label class="form-label fw-bold">Stok Per Ukuran</label>
+                  <label class="form-label fw-bold">Stok &amp; Harga Per Ukuran</label>
                   <div class="alert alert-info py-2 px-3 small mb-2" id="stok-info-no-ukuran">
                     <i class="ti ti-info-circle me-1"></i> Tidak ada ukuran — masukkan stok total produk.
                   </div>
@@ -100,7 +100,8 @@
                       <thead class="table-light">
                         <tr>
                           <th>Ukuran</th>
-                          <th style="width:160px">Stok</th>
+                          <th style="width:140px">Stok</th>
+                          <th style="width:180px">Harga Khusus (Rp) <small class="text-muted fw-normal">opsional</small></th>
                         </tr>
                       </thead>
                       <tbody id="stok-tbody">
@@ -108,6 +109,7 @@
                         <tr id="stok-default-row">
                           <td class="align-middle text-muted fst-italic">Default (tanpa ukuran)</td>
                           <td><input type="number" name="stok_ukuran[default]" class="form-control form-control-sm" value="0" min="0"></td>
+                          <td><span class="text-muted small">—</span></td>
                         </tr>
                       </tbody>
                     </table>
@@ -149,7 +151,7 @@
         }
     });
 
-    // =========== UKURAN + STOK DINAMIS ===========
+    // =========== UKURAN + STOK + HARGA DINAMIS ===========
     function rebuildStokTable() {
         const ukuranInputs = document.querySelectorAll('.ukuran-input');
         const tbody = document.getElementById('stok-tbody');
@@ -169,7 +171,8 @@
                 const tr = document.createElement('tr');
                 tr.className = 'stok-ukuran-row';
                 tr.innerHTML = `<td class="align-middle fw-semibold">${ukuran}</td>
-                    <td><input type="number" name="stok_ukuran[${idx}]" class="form-control form-control-sm" value="0" min="0"></td>`;
+                    <td><input type="number" name="stok_ukuran[${idx}]" class="form-control form-control-sm" value="0" min="0"></td>
+                    <td><input type="number" name="harga_ukuran[${idx}]" class="form-control form-control-sm" placeholder="Sama dengan harga utama" min="0"></td>`;
                 tbody.appendChild(tr);
             });
         } else {

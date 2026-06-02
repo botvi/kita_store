@@ -162,7 +162,7 @@
                     <small
                         class="text-muted text-uppercase fw-bold mb-2">{{ $produk->kategori_produk->nama_kategori ?? 'Umum' }}</small>
                     <h2 class="fw-bold mb-3" style="text-transform: uppercase;">{{ $produk->nama_produk }}</h2>
-                    <h4 class="text-dark fw-bold mb-4">
+                    <h4 class="text-dark fw-bold mb-4" id="harga-display">
                         Rp {{ number_format($produk->harga, 0, ',', '.') }}
                         @if ($produk->is_custom == 1 && $produk->harga_custom)
                             <br><small class="text-muted fs-6">Harga Custom: Rp
@@ -225,7 +225,8 @@
                                         @endphp
                                         <div class="option-box {{ $stokUkuranIni == 0 ? 'out-of-stock' : '' }}"
                                             data-group="ukuran" data-value="{{ $ukuran }}"
-                                            data-stok="{{ $stokUkuranIni }}">
+                                                        data-stok="{{ $stokUkuranIni }}"
+                                            data-harga="{{ is_array($produk->harga_per_ukuran) && isset($produk->harga_per_ukuran[$ukuran]) ? $produk->harga_per_ukuran[$ukuran] : '' }}">
                                             {{ $ukuran }}
                                             @if ($stokUkuranIni == 0)
                                                 <small
@@ -272,7 +273,9 @@
 
 @push('scripts')
     <script>
-        const stokData = @json($produk->stok_per_ukuran ?? []);
+        const stokData  = @json($produk->stok_per_ukuran ?? []);
+        const hargaData = @json($produk->harga_per_ukuran ?? []);
+        const hargaUtama = {{ $produk->harga }};
         const hasUkuran = {{ $hasUkuran ? 'true' : 'false' }};
         const totalStok = {{ $defaultStok }};
 
@@ -282,9 +285,21 @@
             const btnKeranjang = document.getElementById('btn-keranjang');
             const inputQty = document.getElementById('input-qty');
 
-            // ─── Update stok indicator setelah ukuran dipilih ───────────────
+            // ─── Update stok indicator + harga setelah ukuran dipilih ───────
             function updateStokUI(ukuran) {
                 const stok = stokData[ukuran] !== undefined ? parseInt(stokData[ukuran]) : 0;
+
+                // Update harga display
+                const hargaDisplay = document.getElementById('harga-display');
+                if (hargaDisplay) {
+                    const hargaKhusus = hargaData[ukuran];
+                    const hargaFinal = (hargaKhusus && parseFloat(hargaKhusus) > 0) ? parseFloat(hargaKhusus) : hargaUtama;
+                    const formatted = new Intl.NumberFormat('id-ID').format(hargaFinal);
+                    const suffixKhusus = (hargaKhusus && parseFloat(hargaKhusus) > 0)
+                        ? ` <small class="text-danger fs-6 fw-normal">(harga ukuran ${ukuran})</small>`
+                        : '';
+                    hargaDisplay.innerHTML = `Rp ${formatted}${suffixKhusus}`;
+                }
 
                 if (stok === 0) {
                     stokIndicator.textContent = 'Stok Habis';

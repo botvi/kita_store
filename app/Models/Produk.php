@@ -17,6 +17,7 @@ class Produk extends Model
         'harga',
         'stok',
         'stok_per_ukuran',
+        'harga_per_ukuran',
         'gambar',
         'varian',
         'ukuran',
@@ -29,6 +30,7 @@ class Produk extends Model
         'varian'          => 'array',
         'ukuran'          => 'array',
         'stok_per_ukuran' => 'array',
+        'harga_per_ukuran' => 'array',
         'is_custom'       => 'boolean',
     ];
 

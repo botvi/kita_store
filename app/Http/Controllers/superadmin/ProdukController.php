@@ -37,26 +37,35 @@ class ProdukController extends Controller
             'ukuran'             => 'nullable|array',
             'stok_ukuran'        => 'nullable|array',
             'stok_ukuran.*'      => 'nullable|integer|min:0',
+            'harga_ukuran'       => 'nullable|array',
+            'harga_ukuran.*'     => 'nullable|numeric|min:0',
         ]);
 
-        $data = $request->except(['gambar', 'stok_ukuran']);
+        $data = $request->except(['gambar', 'stok_ukuran', 'harga_ukuran']);
         $data['is_custom'] = $request->has('is_custom') ? 1 : 0;
 
-        // Proses stok_per_ukuran
-        $ukuranArr     = array_filter((array) $request->input('ukuran', []), fn($v) => $v !== null && $v !== '');
-        $stokUkuranIn  = $request->input('stok_ukuran', []);
-        $stokPerUkuran = [];
+        // Proses stok_per_ukuran & harga_per_ukuran
+        $ukuranArr      = array_filter((array) $request->input('ukuran', []), fn($v) => $v !== null && $v !== '');
+        $stokUkuranIn   = $request->input('stok_ukuran', []);
+        $hargaUkuranIn  = $request->input('harga_ukuran', []);
+        $stokPerUkuran  = [];
+        $hargaPerUkuran = [];
 
         if (!empty($ukuranArr)) {
             foreach ($ukuranArr as $idx => $ukuran) {
-                $stokPerUkuran[$ukuran] = (int) ($stokUkuranIn[$idx] ?? 0);
+                $stokPerUkuran[$ukuran]  = (int) ($stokUkuranIn[$idx] ?? 0);
+                $hargaVal = $hargaUkuranIn[$idx] ?? null;
+                if ($hargaVal !== null && $hargaVal !== '') {
+                    $hargaPerUkuran[$ukuran] = (float) $hargaVal;
+                }
             }
         } else {
             // Tidak ada ukuran → pakai stok default
             $stokPerUkuran['default'] = (int) ($stokUkuranIn['default'] ?? 0);
         }
 
-        $data['stok_per_ukuran'] = $stokPerUkuran;
+        $data['stok_per_ukuran']  = $stokPerUkuran;
+        $data['harga_per_ukuran'] = !empty($hargaPerUkuran) ? $hargaPerUkuran : null;
         $data['stok'] = array_sum($stokPerUkuran); // sinkron kolom lama
 
         // Upload gambar
@@ -97,26 +106,35 @@ class ProdukController extends Controller
             'ukuran'             => 'nullable|array',
             'stok_ukuran'        => 'nullable|array',
             'stok_ukuran.*'      => 'nullable|integer|min:0',
+            'harga_ukuran'       => 'nullable|array',
+            'harga_ukuran.*'     => 'nullable|numeric|min:0',
         ]);
 
         $produk = Produk::findOrFail($id);
-        $data   = $request->except(['gambar', 'stok_ukuran']);
+        $data   = $request->except(['gambar', 'stok_ukuran', 'harga_ukuran']);
         $data['is_custom'] = $request->has('is_custom') ? 1 : 0;
 
-        // Proses stok_per_ukuran
-        $ukuranArr     = array_filter((array) $request->input('ukuran', []), fn($v) => $v !== null && $v !== '');
-        $stokUkuranIn  = $request->input('stok_ukuran', []);
-        $stokPerUkuran = [];
+        // Proses stok_per_ukuran & harga_per_ukuran
+        $ukuranArr      = array_filter((array) $request->input('ukuran', []), fn($v) => $v !== null && $v !== '');
+        $stokUkuranIn   = $request->input('stok_ukuran', []);
+        $hargaUkuranIn  = $request->input('harga_ukuran', []);
+        $stokPerUkuran  = [];
+        $hargaPerUkuran = [];
 
         if (!empty($ukuranArr)) {
             foreach ($ukuranArr as $idx => $ukuran) {
-                $stokPerUkuran[$ukuran] = (int) ($stokUkuranIn[$idx] ?? 0);
+                $stokPerUkuran[$ukuran]  = (int) ($stokUkuranIn[$idx] ?? 0);
+                $hargaVal = $hargaUkuranIn[$idx] ?? null;
+                if ($hargaVal !== null && $hargaVal !== '') {
+                    $hargaPerUkuran[$ukuran] = (float) $hargaVal;
+                }
             }
         } else {
             $stokPerUkuran['default'] = (int) ($stokUkuranIn['default'] ?? 0);
         }
 
-        $data['stok_per_ukuran'] = $stokPerUkuran;
+        $data['stok_per_ukuran']  = $stokPerUkuran;
+        $data['harga_per_ukuran'] = !empty($hargaPerUkuran) ? $hargaPerUkuran : null;
         $data['stok'] = array_sum($stokPerUkuran);
 
         // Upload gambar

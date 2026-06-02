@@ -119,9 +119,9 @@
                   <button type="button" class="btn btn-sm btn-success" id="add-ukuran">+ Tambah Ukuran</button>
                 </div>
 
-                <!-- ===== TABEL STOK PER UKURAN ===== -->
+                <!-- ===== TABEL STOK + HARGA PER UKURAN ===== -->
                 <div class="form-group mb-3" id="stok-section">
-                  <label class="form-label fw-bold">Stok Per Ukuran</label>
+                  <label class="form-label fw-bold">Stok &amp; Harga Per Ukuran</label>
                   <div class="alert alert-info py-2 px-3 small mb-2" id="stok-info-no-ukuran" style="display:none;">
                     <i class="ti ti-info-circle me-1"></i> Tidak ada ukuran — masukkan stok total produk.
                   </div>
@@ -130,7 +130,8 @@
                       <thead class="table-light">
                         <tr>
                           <th>Ukuran</th>
-                          <th style="width:160px">Stok</th>
+                          <th style="width:130px">Stok</th>
+                          <th style="width:190px">Harga Khusus (Rp) <small class="text-muted fw-normal">opsional</small></th>
                         </tr>
                       </thead>
                       <tbody id="stok-tbody">
@@ -141,6 +142,7 @@
                             @php $defaultStok = (is_array($produk->stok_per_ukuran) && isset($produk->stok_per_ukuran['default'])) ? $produk->stok_per_ukuran['default'] : ($produk->stok ?? 0); @endphp
                             <input type="number" name="stok_ukuran[default]" class="form-control form-control-sm" value="{{ $defaultStok }}" min="0">
                           </td>
+                          <td><span class="text-muted small">—</span></td>
                         </tr>
                         <!-- Baris per ukuran (pre-filled dari data existing) -->
                         @if(is_array($produk->ukuran) && count($produk->ukuran) > 0)
@@ -150,6 +152,10 @@
                             <td>
                               @php $stokVal = (is_array($produk->stok_per_ukuran) && isset($produk->stok_per_ukuran[$ukuran])) ? $produk->stok_per_ukuran[$ukuran] : 0; @endphp
                               <input type="number" name="stok_ukuran[{{ $idx }}]" class="form-control form-control-sm" value="{{ $stokVal }}" min="0">
+                            </td>
+                            <td>
+                              @php $hargaVal = (is_array($produk->harga_per_ukuran) && isset($produk->harga_per_ukuran[$ukuran])) ? $produk->harga_per_ukuran[$ukuran] : ''; @endphp
+                              <input type="number" name="harga_ukuran[{{ $idx }}]" class="form-control form-control-sm" value="{{ $hargaVal }}" placeholder="Sama dengan harga utama" min="0">
                             </td>
                           </tr>
                           @endforeach
@@ -179,8 +185,9 @@
   </section>
 
   <script>
-    // Existing stok data dari PHP untuk referensi
-    const existingStokData = @json($produk->stok_per_ukuran ?? []);
+    // Existing stok & harga data dari PHP untuk referensi
+    const existingStokData  = @json($produk->stok_per_ukuran ?? []);
+    const existingHargaData = @json($produk->harga_per_ukuran ?? []);
 
     // =========== VARIAN ===========
     document.getElementById('add-varian').addEventListener('click', function () {
@@ -197,7 +204,7 @@
         }
     });
 
-    // =========== UKURAN + STOK DINAMIS ===========
+    // =========== UKURAN + STOK + HARGA DINAMIS ===========
     function rebuildStokTable() {
         const ukuranInputs = document.querySelectorAll('.ukuran-input');
         const tbody = document.getElementById('stok-tbody');
@@ -214,12 +221,14 @@
             infoNoUkuran.style.display = 'none';
 
             ukuranValues.forEach(function (ukuran, idx) {
-                const stokVal = existingStokData[ukuran] ?? 0;
+                const stokVal  = existingStokData[ukuran]  ?? 0;
+                const hargaVal = existingHargaData[ukuran] ?? '';
                 const tr = document.createElement('tr');
                 tr.className = 'stok-ukuran-row';
                 tr.dataset.ukuran = ukuran;
                 tr.innerHTML = `<td class="align-middle fw-semibold">${ukuran}</td>
-                    <td><input type="number" name="stok_ukuran[${idx}]" class="form-control form-control-sm" value="${stokVal}" min="0"></td>`;
+                    <td><input type="number" name="stok_ukuran[${idx}]" class="form-control form-control-sm" value="${stokVal}" min="0"></td>
+                    <td><input type="number" name="harga_ukuran[${idx}]" class="form-control form-control-sm" value="${hargaVal}" placeholder="Sama dengan harga utama" min="0"></td>`;
                 tbody.appendChild(tr);
             });
         } else {
@@ -253,7 +262,6 @@
     });
 
     // Inisialisasi saat page load
-    // Cek apakah produk punya ukuran atau tidak
     const hasUkuran = {{ (is_array($produk->ukuran) && count($produk->ukuran) > 0) ? 'true' : 'false' }};
     if (!hasUkuran) {
         document.getElementById('stok-default-row').style.display = '';
