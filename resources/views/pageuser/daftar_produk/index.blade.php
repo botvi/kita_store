@@ -213,7 +213,8 @@
             </div>
             <div class="modal-body p-4">
                 <p class="fw-bold fs-5 mb-1" id="modal-produk-nama"></p>
-                <p class="text-muted mb-3" id="modal-produk-harga"></p>
+                <p class="text-dark fw-bold fs-4 mb-1" id="modal-produk-harga"></p>
+                <p class="text-muted mb-3" id="modal-harga-note" style="font-size:0.85rem;"></p>
 
                 <form id="form-modal-keranjang" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -337,10 +338,27 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // ── Update stok badge & tombol ───────────────────────────────────
+    // ── Update stok badge, harga & tombol ────────────────────────────
     function updateStokUI(ukuran) {
         const stok = currentStokData[ukuran] !== undefined ? parseInt(currentStokData[ukuran]) : 0;
 
+        // ── Update harga ───────────────────────────────────────────────
+        const hargaEl   = document.getElementById('modal-produk-harga');
+        const noteEl    = document.getElementById('modal-harga-note');
+        const hargaKhusus = currentHargaData[ukuran];
+        const hargaFinal  = (hargaKhusus && parseFloat(hargaKhusus) > 0)
+            ? parseFloat(hargaKhusus)
+            : currentHargaUtama;
+        if (hargaEl) {
+            hargaEl.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(hargaFinal);
+        }
+        if (noteEl) {
+            noteEl.textContent = (hargaKhusus && parseFloat(hargaKhusus) > 0)
+                ? `* Harga khusus ukuran ${ukuran}`
+                : '';
+        }
+
+        // ── Update stok ───────────────────────────────────────────────
         if (stok === 0) {
             stokBadge.textContent = 'Stok Habis';
             stokBadge.className = 'badge rounded-0 px-3 py-2 stok-badge-habis';
@@ -386,10 +404,11 @@ document.addEventListener('DOMContentLoaded', function () {
             // Set form action
             form.action = action;
 
-            // Set nama & harga
+            // Set nama & harga awal
             document.getElementById('modal-produk-nama').textContent = produkNama;
             document.getElementById('modal-produk-harga').textContent =
                 'Rp ' + new Intl.NumberFormat('id-ID').format(produkHarga);
+            document.getElementById('modal-harga-note').textContent = '';
 
             // Reset input
             document.getElementById('modal-input-varian').value = '';
