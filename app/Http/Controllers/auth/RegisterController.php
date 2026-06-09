@@ -51,7 +51,7 @@ class RegisterController extends Controller
             ]);
 
             Auth::login($user);
-            Alert::success('Pendaftaran berhasil!', 'Selamat datang di Linkskuy!');
+            Alert::success('Pendaftaran Berhasil', 'Akun Anda telah berhasil didaftarkan. Selamat datang di KOJAR!');
             return redirect()->route('index');
             
         } catch (\Exception $e) {

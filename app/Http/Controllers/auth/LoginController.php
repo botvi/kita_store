@@ -39,19 +39,19 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             if ($user->role == 'superadmin' || $user->role == 'pemiliktoko') {
-                Alert::success('Login Mantap!', 'Welcome back! Siap-siap ngatur dunia 😎');
+                Alert::success('Login Berhasil', 'Selamat datang kembali di halaman dashboard.');
                 return redirect()->route('dashboard-superadmin');
             } else if ($user->role == 'user') {
-                Alert::success('Login Mantap!', 'Halo bro, selamat datang lagi di Linkskuy!');
+                Alert::success('Login Berhasil', 'Selamat datang kembali di KOJAR.');
                 return redirect()->route('index');
             } else {
                 Auth::logout();
-                Alert::error('Login Failed', 'Kamu gak punya akses ke area ini, bro!');
+                Alert::error('Login Gagal', 'Anda tidak memiliki hak akses untuk masuk ke area ini.');
                 return redirect('/login');
             }
         }
     
-        Alert::error('Login Failed', 'Username atau password kamu salah, bro!');
+        Alert::error('Login Gagal', 'Username atau password yang Anda masukkan salah.');
         return back();
     }
 
@@ -60,7 +60,7 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        Alert::success('Yah, cabut dulu ya?', 'Logout sukses, jangan lupa balik lagi bro!');
+        Alert::success('Logout Berhasil', 'Anda telah berhasil keluar dari akun Anda.');
         return redirect('/');
     }
 }
