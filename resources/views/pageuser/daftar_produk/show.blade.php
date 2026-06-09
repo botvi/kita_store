@@ -270,6 +270,83 @@
             </div>
         </div>
     </div>
+
+    <!-- Section Ulasan / Review -->
+    <div class="container pb-5 mb-5 mt-5">
+        <div class="row">
+            <div class="col-12">
+                <hr class="my-5" style="border-top: 2px solid #eaeaea;">
+                <h4 class="fw-bold mb-4 text-uppercase" style="letter-spacing: 1px;">Ulasan Pelanggan</h4>
+                
+                @if ($produk->ulasans->isEmpty())
+                    <div class="text-center py-5 bg-white border shadow-sm">
+                        <i class="fa-regular fa-comment-dots fs-1 text-muted mb-3"></i>
+                        <p class="text-muted mb-0 fw-semibold">Belum ada ulasan untuk produk ini. Jadilah yang pertama memberikan ulasan!</p>
+                    </div>
+                @else
+                    <div class="row">
+                        <!-- Summary Rating -->
+                        <div class="col-md-4 mb-4">
+                            <div class="card border rounded-0 p-4 text-center bg-white h-100 d-flex flex-column justify-content-center align-items-center shadow-sm">
+                                @php
+                                    $avgRating = round($produk->ulasans->avg('rating'), 1);
+                                    $totalUlasan = $produk->ulasans->count();
+                                @endphp
+                                <h1 class="fw-extrabold text-dark mb-1" style="font-size: 3.5rem;">{{ $avgRating }}</h1>
+                                <div class="text-warning fs-4 mb-2">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= round($avgRating))
+                                            <i class="fa-solid fa-star"></i>
+                                        @else
+                                            <i class="fa-regular fa-star"></i>
+                                        @endif
+                                    @endfor
+                                </div>
+                                <p class="text-muted mb-0 fw-semibold">Berdasarkan {{ $totalUlasan }} Ulasan</p>
+                            </div>
+                        </div>
+
+                        <!-- List Ulasan -->
+                        <div class="col-md-8">
+                            <div class="card border rounded-0 p-4 bg-white shadow-sm">
+                                <div class="review-list">
+                                    @foreach ($produk->ulasans()->with('user')->latest()->get() as $idx => $ulasan)
+                                        <div class="review-item {{ $idx > 0 ? 'border-top pt-4 mt-4' : '' }}">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="user-avatar bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold me-3 shadow-sm" style="width: 45px; height: 45px; font-size: 1.1rem;">
+                                                        @if ($ulasan->user && $ulasan->user->foto_profile)
+                                                            <img src="{{ asset($ulasan->user->foto_profile) }}" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                                                        @else
+                                                            {{ strtoupper(substr($ulasan->user->name ?? 'U', 0, 1)) }}
+                                                        @endif
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="fw-bold mb-0 text-dark">{{ $ulasan->user->name ?? 'Pelanggan' }}</h6>
+                                                        <small class="text-muted">{{ $ulasan->created_at->format('d M Y') }}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="text-warning small">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        @if ($i <= $ulasan->rating)
+                                                            <i class="fa-solid fa-star"></i>
+                                                        @else
+                                                            <i class="fa-regular fa-star"></i>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                            </div>
+                                            <p class="text-muted mb-0" style="line-height: 1.6; font-size: 0.95rem;">{{ $ulasan->ulasan }}</p>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')

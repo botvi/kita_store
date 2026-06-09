@@ -106,4 +106,5 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/riwayat-pesanan', [RiwayatPesananController::class, 'index'])->name('riwayat-pesanan.index');
     Route::post('/riwayat-pesanan/cancel/{id}', [RiwayatPesananController::class, 'cancel'])->name('riwayat-pesanan.cancel');
+    Route::post('/riwayat-pesanan/ulasan', [RiwayatPesananController::class, 'storeUlasan'])->name('riwayat-pesanan.ulasan');
 });

@@ -16,7 +16,7 @@ class DashboardSuperAdminController extends Controller
         $totalProduk = \App\Models\Produk::count();
         $totalKategori = \App\Models\KategoriProduk::count();
         $totalPesanan = \App\Models\Pesanan::count();
-        $pendapatan = \App\Models\Pesanan::whereIn('status', ['settlement', 'capture', 'success'])->sum('total_harga');
+        $pendapatan = \App\Models\Pesanan::where('status', '!=', 'UNPAID')->sum('total_harga');
 
         // Data for chart (e.g., Pesanan per bulan in current year)
         $chartData = \App\Models\Pesanan::selectRaw('MONTH(created_at) as month, COUNT(*) as count')

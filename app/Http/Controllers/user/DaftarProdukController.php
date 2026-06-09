@@ -23,7 +23,7 @@ class DaftarProdukController extends Controller
 
     public function show($id)
     {
-        $produk = Produk::with('kategori_produk')->findOrFail($id);
+        $produk = Produk::with(['kategori_produk', 'ulasans.user'])->findOrFail($id);
         return view('pageuser.daftar_produk.show', compact('produk'));
     }
 }

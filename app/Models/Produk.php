@@ -77,5 +77,10 @@ class Produk extends Model
         $this->stok = array_sum($data);
         $this->save();
     }
+
+    public function ulasans()
+    {
+        return $this->hasMany(Ulasan::class);
+    }
 }
 
