@@ -22,7 +22,7 @@
                     <tr>
                         <td>{{ $item->created_at->format('d M Y H:i') }}</td>
                         <td><strong>{{ $item->order_id }}</strong></td>
-                        <td>{{ $item->user->name ?? 'User Dihapus' }}</td>
+                        <td>{{ $item->nama_pelanggan }}</td>
                         <td>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
                         <td>
                             @if($item->status == 'UNPAID')

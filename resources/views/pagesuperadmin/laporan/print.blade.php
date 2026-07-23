@@ -92,7 +92,13 @@
 
     <div class="sub-header">
         <h3>Laporan Penjualan (Selesai/Lunas)</h3>
-        <p>Periode: <strong>{{ $start_date->format('d M Y') }}</strong> s/d <strong>{{ $end_date->format('d M Y') }}</strong></p>
+        <p>Periode: 
+            @if($start_date && $end_date)
+                <strong>{{ $start_date->format('d M Y') }}</strong> s/d <strong>{{ $end_date->format('d M Y') }}</strong>
+            @else
+                <strong>Semua Periode</strong>
+            @endif
+        </p>
     </div>
 
     <table>
@@ -112,7 +118,7 @@
                 <td class="text-center">{{ $e + 1 }}</td>
                 <td>{{ $pesanan->created_at->format('d-m-Y H:i') }}</td>
                 <td>{{ $pesanan->order_id }}</td>
-                <td>{{ $pesanan->user->name ?? 'User Dihapus' }}</td>
+                <td>{{ $pesanan->nama_pelanggan }}</td>
                 <td>
                     @php
                         $details = is_string($pesanan->produk_id) ? json_decode($pesanan->produk_id, true) : $pesanan->produk_id;
@@ -120,7 +126,12 @@
                     @if(is_array($details))
                         <ul style="margin:0; padding-left:15px; color:#444;">
                         @foreach($details as $d)
-                            <li>{{ $d['nama_produk'] }} (Qty: {{ $d['qty'] }})</li>
+                            <li>
+                                <strong>{{ $d['nama_produk'] }}</strong>
+                                @if(!empty($d['ukuran'])) (Uk: {{ $d['ukuran'] }}) @endif
+                                @if(!empty($d['varian'])) (Varian: {{ $d['varian'] }}) @endif
+                                - {{ $d['qty'] }} x Rp {{ number_format($d['harga_satuan'] ?? 0, 0, ',', '.') }}
+                            </li>
                         @endforeach
                         </ul>
                     @endif

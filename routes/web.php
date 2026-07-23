@@ -81,6 +81,7 @@ Route::group(['middleware' => ['role:superadmin,pemiliktoko']], function () {
     Route::resource('api-midtrans', APIMidtransController::class);
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/print', [LaporanController::class, 'print'])->name('laporan.print');
+    Route::post('/laporan/store-offline', [LaporanController::class, 'storeOffline'])->name('laporan.storeOffline');
 });
 
 

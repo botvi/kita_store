@@ -70,7 +70,7 @@
                         </div>
                         <div class="card-body">
                             <p class="text-muted mb-1 small">Nama Pembeli</p>
-                            <h6 class="fw-bold mb-3">{{ $pesanan->user->name ?? 'User Dihapus' }}</h6>
+                            <h6 class="fw-bold mb-3">{{ $pesanan->nama_pelanggan }}</h6>
 
                             <p class="text-muted mb-1 small">Nomor HP/WA</p>
                             <h6 class="fw-bold mb-3">{{ $pesanan->user->no_wa ?? '-' }}</h6>
