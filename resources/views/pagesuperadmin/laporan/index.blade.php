@@ -214,11 +214,7 @@
                                                     <div class="d-flex flex-column gap-2 py-1">
                                                     @foreach($det as $d)
                                                         <div class="d-flex align-items-center gap-2">
-                                                            @if(!empty($d['gambar']))
-                                                                <img src="{{ asset($d['gambar']) }}" class="product-thumb-sm" alt="Foto">
-                                                            @else
-                                                                <div class="bg-light border text-center text-muted rounded d-flex align-items-center justify-content-center" style="width:38px;height:38px;font-size:0.65rem;">No Img</div>
-                                                            @endif
+                                                         
                                                             <div>
                                                                 <span class="fw-bold d-block text-dark small" style="line-height: 1.2;">{{ $d['nama_produk'] }}</span>
                                                                 <span class="small text-muted">
